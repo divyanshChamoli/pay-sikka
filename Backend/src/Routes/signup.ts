@@ -7,6 +7,5 @@ router.get('/signup',(req: Request, res: Response)=>{
 })
 
 
-
 module.exports=router
 

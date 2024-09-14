@@ -1,13 +1,14 @@
-import { Express, Router } from "express"
-import { connectToDB, User } from "./db"
-
+import { Express } from "express"
+import { connectToDB } from "./db"
+import cors from "cors"
 const express=require("express")
 const app: Express=express()
-const signup=require("./Routes/signup")
-
+const rootRouter=require("./Routes/index")
 connectToDB()
 
-app.use("/",signup)
+app.use(cors())
+app.use(express.json())
+app.use("/api/v1/",rootRouter)
 
 app.listen(3000,()=>{
     console.log("Listening")
