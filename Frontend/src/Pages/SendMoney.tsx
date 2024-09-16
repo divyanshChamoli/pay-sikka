@@ -1,4 +1,4 @@
-export default function Send(){
+export default function SendMoney(){
     return(
         <>
             Send
