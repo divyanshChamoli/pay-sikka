@@ -8,3 +8,4 @@ export const SignupBodySchema=z.object({
 })
 
 export type SignupBodyType=z.infer<typeof SignupBodySchema>
+
