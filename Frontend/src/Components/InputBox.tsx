@@ -14,7 +14,7 @@ export default function InputBox({label,placeholder,type,value, onChange}: Input
     return(
         <div>
             <div className=" text-left text-sm font-bold ">{label}</div>
-            <input className=" border border-gray-400 w-full p-1 my-2 rounded-sm" type={type} placeholder={placeholder} 
+            <input className=" border border-gray-400 w-full p-2 my-2 rounded-sm placeholder-neutral-500 " type={type} placeholder={placeholder} 
              value={value} onChange={onChange}/>
         </div>
     )

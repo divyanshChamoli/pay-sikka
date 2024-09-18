@@ -8,12 +8,12 @@ import SubHeading from "./Components/SubHeading"
 import BottomWarning from "./Components/BottomWarning"
 import InputBox from "./Components/InputBox"
 import Button from "./Components/Button"
+import UserIcon from "./Components/UserIcon"
 
 function App() {
   return (
     <>  
       <BrowserRouter>
-        {/* <BottomWarning label={"Already have an account?"} linkText={"Login"} linkTo={"/signin"}/> */}
         <Routes>
           <Route path="/signup" element={<Signup/>} />
           <Route path="/signin" element={<Signin/>} />
