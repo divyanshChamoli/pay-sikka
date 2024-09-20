@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose, { Types } from "mongoose"
 import { Schema, model } from "mongoose"
 
 export const connectToDB=async()=>{
@@ -12,7 +12,7 @@ export const connectToDB=async()=>{
 }
 // connectToDB()
 
-interface User{
+export interface User{
     firstName: string,
     lastName: string,
     password: string,
@@ -27,3 +27,20 @@ const UserSchema=new Schema<User>({
 })
 
 export const User= model<User>("User", UserSchema)
+
+interface Account{
+    balance: number,
+    userId: Types.ObjectId
+}  
+
+const AccountSchema =new Schema<Account>({
+    balance: Number,
+    userId: {   
+        type: Schema.Types.ObjectId,
+        ref: "User"
+    }
+})
+
+export const Account=new mongoose.Model("Account", AccountSchema)
+
+
