@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { User } from "../db";
+import { Account, User } from "../db";
 import jwt from "jsonwebtoken"
 import { SigninBodyType, SignupBodyType } from "../zod";
 import { JWT_SECRET } from "../config";
@@ -10,7 +10,8 @@ import SigninBodyValidationMiddleware from "../Middleware/SigninBodyValidationMi
 const router=Router()
 
 router.post('/signup',SignupBodyValidationMiddleware , async (req: Request,res: Response)=>{
-    const signupBody:SignupBodyType=req.body
+    const signupBody: SignupBodyType=req.body
+    const randomBalance: number=1+Math.floor(Math.random()*10000)
     try{
         const userExists=await User.exists({username:signupBody.username})
         if(userExists){
@@ -19,6 +20,13 @@ router.post('/signup',SignupBodyValidationMiddleware , async (req: Request,res: 
         const newUser=await User.create(signupBody)
         const userId=newUser._id
         const token=jwt.sign({userId},JWT_SECRET);
+
+        const balance=await Account.create({userId, balance: randomBalance})
+        if(!balance){
+            throw new Error("User dummy account cant be created")
+        }
+        console.log("username", signupBody.username)
+        console.log("token", token)
         res.json({
             message: "User created successfully",
             userId: userId,
@@ -28,7 +36,7 @@ router.post('/signup',SignupBodyValidationMiddleware , async (req: Request,res: 
     catch(err){
         console.log(err)
         res.json({
-            message: "Error"
+            Error : err
         })
     }
 })

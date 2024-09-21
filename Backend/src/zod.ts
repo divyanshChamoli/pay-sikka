@@ -23,3 +23,10 @@ export const UserUpdateBodySchema=z.object({
 })
 
 export type UserUpdateBodyType=Partial<z.infer<typeof UserUpdateBodySchema>>
+
+export const TransferBodySchema=z.object({
+    to: z.string(),
+    amount: z.number()
+})
+
+export type TransferBodyType=z.infer<typeof TransferBodySchema>

@@ -41,6 +41,6 @@ const AccountSchema =new Schema<Account>({
     }
 })
 
-export const Account=new mongoose.Model("Account", AccountSchema)
+export const Account=model<Account>("Account", AccountSchema)
 
 
