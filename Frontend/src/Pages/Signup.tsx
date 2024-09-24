@@ -5,6 +5,7 @@ import Heading from "../Components/Heading"
 import InputBox from "../Components/InputBox"
 import SubHeading from "../Components/SubHeading"
 import axios from "axios"
+import { useNavigate } from "react-router-dom"
 
 interface SignupBodyType {
     firstName: string;
@@ -19,6 +20,8 @@ export default function Signup(){
     const [email, setEmail]= useState("")
     const [password, setPassword]= useState("")    
     
+    const navigate=useNavigate()
+    
     const onClick=async ()=>{
         try{
             //No type safety
@@ -28,7 +31,18 @@ export default function Signup(){
                 password,
                 username: email
             })
-            localStorage.setItem("token",res.data.token)
+            
+            localStorage.setItem("token", res.data.token)
+
+            setEmail("")
+            setFirstName("")
+            setLastName("")
+            setPassword("")
+            
+            if(!res.data.Error){
+                navigate("/dashboard")
+            }
+
         }
         catch(e){
             console.log("Error",e)

@@ -8,10 +8,11 @@ import { Types } from "mongoose";
 
 const router=Router()
 
-router.get("/balance",async (req: Request , res: Response)=>{
+router.get("/balance",AuthenticationMiddleware ,async (req: Request , res: Response)=>{
     const userId=res.locals.userId
+    console.log(userId)
     try{
-        const account=await Account.findOne({_id: userId})
+        const account=await Account.findOne({userId: userId})
         if(!account){
             throw new Error("Balance not found")
         }
@@ -56,8 +57,14 @@ router.post("/transfer",AuthenticationMiddleware ,TransferBodyValidationMiddlewa
         })
     }
     catch(e){
+        let message
+        if(e instanceof Error){
+            message=e.message
+        }
+        console.log(e)
+        console.log(message)
         res.json({
-            Error : e
+            Error : message
         })
     }
 })

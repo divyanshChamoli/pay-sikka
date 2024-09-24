@@ -11,7 +11,7 @@ const router=Router()
 
 router.post('/signup',SignupBodyValidationMiddleware , async (req: Request,res: Response)=>{
     const signupBody: SignupBodyType=req.body
-    const randomBalance: number=1+Math.floor(Math.random()*10000)
+    const randomBalance: number=1+Math.floor(Math.random()*100000)
     try{
         const userExists=await User.exists({username:signupBody.username})
         if(userExists){
@@ -45,18 +45,39 @@ router.post("/signin",SigninBodyValidationMiddleware ,async (req:Request ,res: R
     const signinBody:SigninBodyType=req.body
     try{
         const user=await User.findOne(signinBody)
+        console.log(user)
         if(!user){
-            throw new Error()
+            throw new Error("User not found")
         }
         const token=jwt.sign({userId: user._id},JWT_SECRET)
+
         res.json({
             token: token
         })
     }
-    catch(err){
-        console.log(err)
+    catch(e){
         res.json({
-            message: "Error"
+            Error: e
+        })
+    }
+})
+
+router.get("/username",AuthenticationMiddleware ,async (req,res)=>{
+    const userId=res.locals.userId
+    console.log(userId)
+    try{
+        const user=await User.findById(userId)
+        console.log(user)
+        if(!user){
+            throw new Error("User not found")
+        }
+        res.json({
+            username: user.firstName
+        })
+    }
+    catch(e){
+        res.json({
+            Error: e
         })
     }
 })
@@ -83,13 +104,25 @@ router.put("/user",AuthenticationMiddleware ,async (req: Request, res: Response)
 
 router.get("/bulk",async (req: Request, res: Response)=>{
     try{
-        const filter=req.query.filter
-        const users=await User.find({ $or: [{firstName: filter}, {lastName: filter}]})
+        const filter=req.query.filter || ""
+        // const users=await User.find({ $or: [{firstName: filter}, {lastName: filter}]})
+        const users = await User.find({
+            $or: [{
+                firstName: {
+                    "$regex": filter
+                }
+            }, {
+                lastName: {
+                    "$regex": filter
+                }
+            }]
+        })
         if(!users){
             throw new Error("Cannot get users")
         }
         const filteredUsers=users.map((user)=>{
             return {
+                username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 _id: user._id
